@@ -318,12 +318,10 @@
         <a data-social="github" href="#" aria-label="GitHub">
           <img src="assets/images/github.png" alt="GitHub" />
         </a>
-        <a
-          data-social="linkedin" href="#" aria-label="LinkedIn">
+        <a data-social="linkedin" href="#" aria-label="LinkedIn">
           <img src="assets/images/linkedin.png" alt="LinkedIn" />
         </a>
-        <a data-social="email"
-          href="#" aria-label="Email">
+        <a data-social="email" href="#" aria-label="Email">
           <img src="assets/images/gmail-1162901_1280.png" alt="Gmail" />
         </a>
       </div>
@@ -334,8 +332,9 @@
 
   <section class="interactive-terminal" aria-label="Interactive terminal">
     <div class="terminal-head"><span><i></i><i></i><i></i> INTERACTIVE TERMINAL</span><button class="terminal-toggle"
-        aria-expanded="false">OPEN <i data-lucide="chevron-up"></i></button></div>
-    <div class="terminal-console" hidden>
+        type="button" aria-expanded="false" aria-controls="terminal-console"><span class="terminal-toggle-label">OPEN
+          ↑</span></button></div>
+    <div class="terminal-console" id="terminal-console" aria-hidden="true">
       <div class="terminal-output" id="terminal-output">Ashfaque Terminal v1.0<br>Type <span>help</span> to see
         available commands.<br><br></div>
       <form id="terminal-form"><label for="terminal-input">guest@ashfaque:~$</label><input id="terminal-input"

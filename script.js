@@ -3,24 +3,24 @@ const CONFIG = {
   email: "ashfaquemuhammedm@gmail.com",
   github: "https://github.com/ashfaquemuhammedm-oss",
   linkedin: "https://www.linkedin.com/in/ashfaque-muhammed-m-/",
-  formEndpoint: "", // Optional Formspree endpoint, e.g. https://formspree.io/f/xxxxxxx
+  formEndpoint: "http://localhost:5000/api/contact", // Optional Formspree endpoint, e.g. https://formspree.io/f/xxxxxxx
 };
 
 const PROJECTS = [
   {
     number: "01",
-    title: "LARCH FRAGRANCE",
-    className: "visual-larch",
+    title: "OAR FRAGRANCE",
+    className: "visual-oar",
     description:
-      "A luxury fragrance storefront designed around a refined shopping experience and premium product presentation.",
+      "A modern corporate website developed for OAR Fragrance to showcase its brand identity, fragrance manufacturing capabilities, services, and premium digital presence.",
     tech: ["HTML", "Tailwind CSS", "JavaScript"],
     features: [
-      "Modern luxury product interface",
-      "Responsive shopping experience",
-      "Polished product-card interactions",
+      "Premium corporate brand presentation",
+      "Responsive and modern user interface",
+      "Fragrance manufacturing and service showcase",
     ],
-    live: "#",
-    github: "#",
+    live: "https://www.oarfragrance.com/",
+    github: "https://github.com/ashfaquemuhammedm-oss",
   },
   {
     number: "02",
@@ -35,7 +35,7 @@ const PROJECTS = [
       "NLP-powered relevance insights",
     ],
     live: "#",
-    github: "#",
+    github: "https://github.com/ashfaquemuhammedm-oss",
   },
   {
     number: "03",
@@ -49,8 +49,8 @@ const PROJECTS = [
       "TF-IDF text processing",
       "Simple Streamlit application interface",
     ],
-    live: "#",
-    github: "#",
+    live: "https://fake-news-detection-tcsion.streamlit.app/",
+    github: "https://github.com/ashfaquemuhammedm-oss",
   },
   {
     number: "04",
@@ -64,8 +64,8 @@ const PROJECTS = [
       "Clean product-first layout",
       "Modern frontend interactions",
     ],
-    live: "#",
-    github: "#",
+    live: "https://shop-co-me.vercel.app/",
+    github: "https://github.com/ashfaquemuhammedm-oss",
   },
 ];
 const SKILLS = {
@@ -260,17 +260,15 @@ function initHeroAnimations() {
       repeat: -1,
       ease: "sine.inOut",
     });
-    gsap.utils
-      .toArray(".floating-tag")
-      .forEach((tag, i) =>
-        gsap.to(tag, {
-          y: i % 2 ? 11 : -10,
-          duration: 2 + i * 0.35,
-          yoyo: true,
-          repeat: -1,
-          ease: "sine.inOut",
-        }),
-      );
+    gsap.utils.toArray(".floating-tag").forEach((tag, i) =>
+      gsap.to(tag, {
+        y: i % 2 ? 11 : -10,
+        duration: 2 + i * 0.35,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut",
+      }),
+    );
   }
 }
 function initQuickTerminal() {
@@ -352,16 +350,15 @@ function initProjects() {
   );
   window.lucide?.createIcons();
   if (matchMedia("(pointer:fine)").matches) {
-    root.querySelectorAll(".project-card").forEach(
-      (card) =>
-        card.addEventListener("mousemove", (e) => {
-          const r = card.getBoundingClientRect(),
-            x = (e.clientX - r.left) / r.width - 0.5,
-            y = (e.clientY - r.top) / r.height - 0.5;
-          card.style.transform = `perspective(900px) rotateY(${x * 4}deg) rotateX(${-y * 4}deg)`;
-        }),
-      card.addEventListener("mouseleave", () => (card.style.transform = "")),
-    );
+    root.querySelectorAll(".project-card").forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        const r = card.getBoundingClientRect(),
+          x = (e.clientX - r.left) / r.width - 0.5,
+          y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = `perspective(900px) rotateY(${x * 4}deg) rotateX(${-y * 4}deg)`;
+      });
+      card.addEventListener("mouseleave", () => (card.style.transform = ""));
+    });
   }
 }
 function initProjectLinks() {
@@ -375,16 +372,14 @@ function initProjectLinks() {
 function initScrollAnimations() {
   if (!window.gsap || matchMedia("(prefers-reduced-motion: reduce)").matches)
     return;
-  gsap.utils
-    .toArray(".reveal")
-    .forEach((el) =>
-      gsap.from(el, {
-        y: 28,
-        opacity: 0,
-        duration: 0.65,
-        scrollTrigger: { trigger: el, start: "top 88%" },
-      }),
-    );
+  gsap.utils.toArray(".reveal").forEach((el) =>
+    gsap.from(el, {
+      y: 28,
+      opacity: 0,
+      duration: 0.65,
+      scrollTrigger: { trigger: el, start: "top 88%" },
+    }),
+  );
   gsap.to(".timeline-fill", {
     height: "100%",
     ease: "none",
@@ -397,49 +392,67 @@ function initScrollAnimations() {
   });
 }
 function initContactForm() {
-  const form = document.getElementById("contact-form"),
-    message = form.querySelector(".form-message");
+  const form = document.getElementById("contact-form");
+  if (!form) return;
+
+  const message = form.querySelector(".form-message");
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     let valid = true;
+
     form.querySelectorAll("[required]").forEach((input) => {
       const ok =
         input.value.trim() && (input.type !== "email" || input.validity.valid);
+
       input.classList.toggle("invalid", !ok);
       valid &&= ok;
     });
+
     if (!valid) {
       message.textContent = "Please complete the highlighted fields.";
       message.className = "form-message";
       return;
     }
-    if (!CONFIG.formEndpoint) {
-      message.textContent = `Email client will open to send your message to ${CONFIG.email}.`;
-      message.className = "form-message success";
-      const data = new FormData(form),
-        subject = encodeURIComponent(data.get("subject")),
-        body = encodeURIComponent(
-          `Name: ${data.get("name")}\nEmail: ${data.get("email")}\n\n${data.get("message")}`,
-        );
-      location.href = `mailto:${CONFIG.email}?subject=${subject}&body=${body}`;
-      return;
-    }
+
     const button = form.querySelector("button");
+
     button.disabled = true;
     button.firstChild.textContent = "SENDING... ";
+
     try {
-      const r = await fetch(CONFIG.formEndpoint, {
+      const data = {
+        name: form.querySelector('[name="name"]').value.trim(),
+        email: form.querySelector('[name="email"]').value.trim(),
+        subject: form.querySelector('[name="subject"]').value.trim(),
+        message: form.querySelector('[name="message"]').value.trim(),
+      };
+
+      const response = await fetch(CONFIG.formEndpoint, {
         method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
-      if (!r.ok) throw Error();
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to send message");
+      }
+
       form.reset();
-      message.textContent = "Message sent. Thank you!";
+
+      message.textContent = "Message sent successfully! Thank you.";
       message.className = "form-message success";
-    } catch {
+    } catch (error) {
+      console.error("Contact form error:", error);
+
       message.textContent =
-        "Unable to send right now. Please email me directly.";
+        "Unable to send message right now. Please try again.";
+
       message.className = "form-message";
     } finally {
       button.disabled = false;
@@ -448,42 +461,80 @@ function initContactForm() {
   });
 }
 function initInteractiveTerminal() {
-  const toggle = document.querySelector(".terminal-toggle"),
+  const terminal = document.querySelector(".interactive-terminal"),
+    toggle = document.querySelector(".terminal-toggle"),
+    toggleLabel = document.querySelector(".terminal-toggle-label"),
     consoleEl = document.querySelector(".terminal-console"),
     input = document.getElementById("terminal-input"),
-    out = document.getElementById("terminal-output");
-  toggle.addEventListener("click", () => {
-    const open = consoleEl.hidden;
-    consoleEl.hidden = !open;
-    toggle.setAttribute("aria-expanded", open);
-    toggle.innerHTML = `${open ? "CLOSE" : "OPEN"} <i data-lucide="chevron-up"></i>`;
-    window.lucide?.createIcons();
-    if (open) input.focus();
-  });
+    out = document.getElementById("terminal-output"),
+    form = document.getElementById("terminal-form");
+  if (
+    !terminal ||
+    !toggle ||
+    !toggleLabel ||
+    !consoleEl ||
+    !input ||
+    !out ||
+    !form
+  )
+    return;
+
+  const initialOutput =
+    "$ help\n\nAvailable commands:\nabout\nskills\nprojects\ncontact\nclear\n\n";
+  const setOpen = (open) => {
+    terminal.classList.toggle("is-open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+    consoleEl.setAttribute("aria-hidden", String(!open));
+    toggleLabel.textContent = open ? "CLOSE ↓" : "OPEN ↑";
+    if (open) requestAnimationFrame(() => input.focus());
+  };
+
+  out.textContent = initialOutput;
+  toggle.addEventListener("click", () =>
+    setOpen(!terminal.classList.contains("is-open")),
+  );
   const commands = {
-    help: "Available commands: help, about, skills, projects, contact, clear",
-    about: "Ashfaque Muhammed M — Frontend Developer from India.",
+    help: "Available commands:\nabout\nskills\nprojects\ncontact\nclear",
+    about:
+      "Name: Ashfaque Muhammed M\nRole: Frontend Developer\nLocation: India",
     skills:
-      "HTML5, CSS3, Tailwind CSS, JavaScript, Python, Node.js, Flask, MongoDB, MySQL, NLP.",
+      "HTML\nCSS\nTailwind CSS\nJavaScript\nPython\nNode.js\nMongoDB\nGit\nGitHub",
     projects:
-      "Larch Fragrance, AI Resume Screening System, Fake News Detection, E-Commerce Website.",
+      "LARCH FRAGRANCE\nAI Resume Screening System\nFake News Detection\nE-Commerce Website",
     contact: `Email: ${CONFIG.email}\nGitHub: ${CONFIG.github}\nLinkedIn: ${CONFIG.linkedin}`,
   };
-  document.getElementById("terminal-form").addEventListener("submit", (e) => {
+  const appendLine = (text, className = "") => {
+    const line = document.createElement("div");
+    if (className) line.className = className;
+    line.textContent = text;
+    out.append(line);
+  };
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
     const cmd = input.value.trim().toLowerCase();
     if (!cmd) return;
-    out.innerHTML += `<span>guest@ashfaque:~$</span> ${cmd}<br>`;
-    if (cmd === "clear") out.innerHTML = "";
-    else
-      out.innerHTML +=
-        (commands[cmd] ||
-          `Command not found: ${cmd}. Type <span>help</span>.`) + "<br><br>";
+    appendLine(`guest@ashfaque:~$ ${cmd}`, "terminal-command");
+    if (cmd === "clear") out.replaceChildren();
+    else {
+      appendLine(
+        commands[cmd] ||
+          'Command not found.\nType "help" to see available commands.',
+      );
+      out.append(document.createElement("br"));
+    }
     input.value = "";
     consoleEl.scrollTop = consoleEl.scrollHeight;
   });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && terminal.classList.contains("is-open")) {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
 }
 document.addEventListener("DOMContentLoaded", () => {
+  // Keep this independent control available if a future page enhancement fails.
+  initInteractiveTerminal();
   setLinks();
   initLoader();
   initNavbar();
@@ -498,6 +549,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initProjectLinks();
   initScrollAnimations();
   initContactForm();
-  initInteractiveTerminal();
   window.lucide?.createIcons();
 });
